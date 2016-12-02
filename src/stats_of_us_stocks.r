@@ -1,3 +1,5 @@
+setwd("/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/src")
+source("init.r")
 pwd = init()
 raw_data = as.xts(get(load("../datasets/us_stocks.rda")))
 
@@ -9,7 +11,7 @@ total_nas = xts(total_nas, index(raw_data))
 
 # only consider a small set of full the full us dataset
 # as the starting year, ie, 1950 is roughly full of NAs
-raw_data = raw_data['1985::']
+raw_data = raw_data['1995::']
 
 # filter require parts
 num_not_na = num_not_na[index(raw_data)]

@@ -1,5 +1,5 @@
 rm(list=ls())
-
+setwd("/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/src")
 source("init.r")
 pwd = init()
 
