@@ -9,8 +9,11 @@ cor_cleaner = function(C_mat, Tin){
   eigns = eigen(C_mat)
   lambda = eigns$values
 
-  lambdaFiltered = lambda * (lambda > lambdaPlus)
-  C_filtered = t(eigns$vectors) %*% diag(lambdaFiltered) %*% eigns$vectors
+  lambdaFiltered = data.frame(lambda * (lambda > lambdaPlus))
+  lambdaFiltered = lambdaFiltered[lambdaFiltered>0]
+
+  tempVector = data.frame(eigns$vectors[, 1:length(lambdaFiltered)])
+  C_filtered = as.matrix(tempVector) %*% diag(lambdaFiltered) %*% t(as.matrix(tempVector))
 
   diag(C_filtered) = 1
 
