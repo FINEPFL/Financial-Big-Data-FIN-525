@@ -8,8 +8,8 @@ file_checker = function(firstday, currentday, filename, allreturns){
     selector = !apply(returns, 2, function(column) any(is.na(column)))
     returns = returns[ , selector]
     
-    #NA checker
-    lapply(returns , function(x) sum(is.na(x)))
+    # NA checker
+    # lapply(returns , function(x) sum(is.na(x)))
 
     C_mat = cor(returns)
     colnames(C_mat) = colnames(returns)
