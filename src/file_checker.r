@@ -7,7 +7,7 @@ file_checker = function(firstday, currentday, filename, allreturns){
     returns = allreturns[paste0(firstday, "::", currentday)]
     selector = !apply(returns, 2, function(column) any(is.na(column)))
     returns = returns[ , selector]
-    
+
     #NA checker
     lapply(returns , function(x) sum(is.na(x)))
 
