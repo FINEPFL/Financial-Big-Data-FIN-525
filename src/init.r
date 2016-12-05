@@ -1,11 +1,13 @@
 init = function(){
   rm(list = ls())
   out = tryCatch(
-    {     library(xts)
+    {     library(zoo)
+          library(xts)
           library(WGCNA)
           library(data.table)
           library(PortfolioAnalytics)
           library(tseries)
+          library(igraph)
           setwd("/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/src")
 
       }, error = function(cond){

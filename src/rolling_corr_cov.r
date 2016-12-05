@@ -50,6 +50,7 @@ for(currentday in as.character(tail(time_steps, -Tin))){
   }
 }
 
+write.table(stdList, sep = ",")
 
 
 
