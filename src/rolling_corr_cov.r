@@ -4,6 +4,7 @@ source("init.r")
 source("file_checker.r")
 source("cor_cleaner.r")
 source("test_used_checker.r")
+library(tawny)
 pwd = init()
 
 us_stock_data = "/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/datasets/mid-results/us_stocks/us_stocks_returns_filtered.rds"
@@ -60,17 +61,15 @@ for(currentday in as.character(tail(time_steps, -Tin))){
   cov_unfiltered_shrinked = cov_shrink(cov_unfiltered)
 
   cov_filtered_testmat = filtered_test_Crr_mat * test_sigma_map
-  cov_unfiltered_testmat = test_Crr_mat * test_sigma_map
+  # cov_unfiltered_testmat = test_Crr_mat * test_sigma_map
   
-  cov_filtered_shrinked_testmat = cov_filtered_shrinked * test_sigma_map
-  cov_unfiltered_shrinked_testmat = cov_unfiltered_shrinked * test_sigma_map
+  cov_filtered_shrinked_testmat = cov_shrink(cov_filtered_testmat) * test_sigma_map
+  # cov_unfiltered_shrinked_testmat = cov_shrink(cov_unfiltered_testmat) * test_sigma_map
   
   myreturns = myreturns[, c(colnames(filtered_test_Crr_mat))]
 
-  filtered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_filtered_shrinked_testmat)
-  unfiltered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_unfiltered_shrinked_testmat)
-
-  browser()
+  filtered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_filtered_shrinked)
+  unfiltered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_unfiltered_shrinked)
   
   filtered_tempweight = filtered_portfolio_statis$pw
   unfiltered_tempweight = unfiltered_portfolio_statis$pw
