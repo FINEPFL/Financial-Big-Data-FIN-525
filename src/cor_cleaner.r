@@ -13,9 +13,10 @@ cor_cleaner = function(C_mat, Tin){
   lambdaFiltered = lambdaFiltered[lambdaFiltered>0]
 
   tempVector = data.frame(eigns$vectors[, 1:length(lambdaFiltered)])
-  C_filtered = as.matrix(tempVector) %*% diag(lambdaFiltered) %*% t(as.matrix(tempVector))
+  C_filtered = (as.matrix(tempVector)) %*% diag(lambdaFiltered) %*% t(as.matrix(tempVector))
 
   diag(C_filtered) = 1
-
+  colnames(C_filtered) = c(colnames(C_mat))
+  rownames(C_filtered) = c(colnames(C_mat))
   return(C_filtered)
 }
