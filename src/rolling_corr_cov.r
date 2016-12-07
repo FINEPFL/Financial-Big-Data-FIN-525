@@ -3,28 +3,34 @@ setwd("/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/src")
 source("init.r")
 source("file_checker.r")
 source("cor_cleaner.r")
+source("test_used_checker.r")
 pwd = init()
 
-us_stock_data = "/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/datasets/mid-results/us_stocks/us_stocks_filtered.rds"
+us_stock_data = "/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/datasets/mid-results/us_stocks/us_stocks_returns_filtered.rds"
 
 returns = readRDS(us_stock_data)
 time_steps = as.character(index(returns))
 
-Tin = 2000
+Tin = 900
 dirname = "/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/datasets/mid-results/us_stocks/rolling_corr"
 
-stdList = list()
-weighList = list()
-counter = 0
+unfilteredList = list()
+filteredList = list()
 
 for(currentday in as.character(tail(time_steps, -Tin))){
-  counter = counter + 1
-  if (counter > 1500) {
+
   firstday = time_steps[which(time_steps %in% currentday) - Tin + 1]
   filename = paste0(dirname, "/corr_us_stocks_Tin", Tin, "_", currentday, ".rds")
   Crr_mat = file_checker(firstday, currentday, filename, returns)
+  names_trimmer = colnames(Crr_mat)
 
-  Crr_filtered = cor_cleaner(Crr_mat, Tin)
+  test_start_date = time_steps[which(time_steps %in% currentday) + 1]
+  test_end_date = time_steps[which(time_steps %in% currentday) + Tin]
+
+  if (!is.na(test_end_date)){
+    test_filename = paste0(dirname, "/testset/test_corr_us_stocks_Tin", Tin, "_", currentday, ".rds")
+    test_Crr_mat = test_used_checker(test_start_date, test_end_date, test_filename, returns, names_trimmer)
+    filtered_test_Crr_mat = cor_cleaner(test_Crr_mat, Tin)
 
   myreturns = returns[paste0(firstday,"::",currentday)]
   stock_names = colnames(myreturns)
@@ -38,24 +44,35 @@ for(currentday in as.character(tail(time_steps, -Tin))){
 
   colnames(sigma_frame) = "product_sigmas"
   sigma_map = sigma_frame$product_sigmas %*% t(sigma_frame$product_sigmas)
-  cov_mat = Crr_filtered * sigma_map
 
-  # portObj = portfolio.spec(assets = names(myreturns))
-  # portObj = add.constraint(portObj, "box", min = 0, max = 1)
-  # optimize.portfolio(myreturns, portObj, optimize_method = "pso")
-  portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_mat)
-  stdList[[length(stdList)+1]] = portfolio_statis$ps
-  # tempweight = portfolio_statis$pw
-  # weighList[length(weighList) + 1] = data.frame(tempweight)
+  colnames(sigma_map) = c(colnames(Crr_mat))
+  rownames(sigma_map) = c(colnames(Crr_mat))
+
+  test_sigma_map = sigma_map[c(colnames(test_Crr_mat)), c(colnames(test_Crr_mat))]
+
+  Crr_filtered = cor_cleaner(Crr_mat, Tin)[c(colnames(test_Crr_mat)), c(colnames(test_Crr_mat))]
+  Crr_mat = Crr_mat[c(colnames(test_Crr_mat)), c(colnames(test_Crr_mat))]
+
+  cov_filtered = Crr_filtered * test_sigma_map
+  cov_unfiltered = Crr_mat * test_sigma_map
+
+  cov_filtered_testmat = filtered_test_Crr_mat * test_sigma_map
+  cov_unfiltered_testmat = test_Crr_mat * test_sigma_map
+
+  myreturns = myreturns[, c(colnames(filtered_test_Crr_mat))]
+
+  filtered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_filtered)
+  unfiltered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_unfiltered)
+
+  filtered_tempweight = filtered_portfolio_statis$pw
+  unfiltered_tempweight = unfiltered_portfolio_statis$pw
+
+  port_risk = t(filtered_tempweight) %*% cov_filtered_testmat %*% filtered_tempweight
+  port_risk_unfiltered = t(unfiltered_tempweight) %*% cov_filtered_testmat %*% unfiltered_tempweight
+
+  filteredList[length(filteredList) + 1] = port_risk
+  unfilteredList[length(unfilteredList) + 1] = port_risk_unfiltered
   }
 }
 
-write.table(stdList, sep = ",")
-
-
-
-
-
-
-
-#
+# write.table(stdList, sep = ",")
