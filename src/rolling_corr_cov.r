@@ -55,20 +55,28 @@ for(currentday in as.character(tail(time_steps, -Tin))){
 
   cov_filtered = Crr_filtered * test_sigma_map
   cov_unfiltered = Crr_mat * test_sigma_map
+  
+  cov_filtered_shrinked = cov_shrink(cov_filtered)
+  cov_unfiltered_shrinked = cov_shrink(cov_unfiltered)
 
   cov_filtered_testmat = filtered_test_Crr_mat * test_sigma_map
   cov_unfiltered_testmat = test_Crr_mat * test_sigma_map
-
+  
+  cov_filtered_shrinked_testmat = cov_filtered_shrinked * test_sigma_map
+  cov_unfiltered_shrinked_testmat = cov_unfiltered_shrinked * test_sigma_map
+  
   myreturns = myreturns[, c(colnames(filtered_test_Crr_mat))]
 
-  filtered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_filtered)
-  unfiltered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_unfiltered)
+  filtered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_filtered_shrinked_testmat)
+  unfiltered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_unfiltered_shrinked_testmat)
 
+  browser()
+  
   filtered_tempweight = filtered_portfolio_statis$pw
   unfiltered_tempweight = unfiltered_portfolio_statis$pw
 
-  port_risk = t(filtered_tempweight) %*% cov_filtered_testmat %*% filtered_tempweight
-  port_risk_unfiltered = t(unfiltered_tempweight) %*% cov_filtered_testmat %*% unfiltered_tempweight
+  port_risk = t(filtered_tempweight) %*% cov_filtered_shrinked_testmat %*% filtered_tempweight
+  port_risk_unfiltered = t(unfiltered_tempweight) %*% cov_filtered_shrinked_testmat %*% unfiltered_tempweight
 
   filteredList[length(filteredList) + 1] = port_risk
   unfilteredList[length(unfilteredList) + 1] = port_risk_unfiltered
