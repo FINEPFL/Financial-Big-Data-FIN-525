@@ -29,7 +29,7 @@ skip_round = 0
 
 for(currentday in as.character(tail(time_steps, -Tin))){
   counter = counter + 1
-  if (counter > -1) {
+  if (counter > 1783) {
     firstday = time_steps[which(time_steps %in% currentday) - Tin + 1]
     filename = paste0(dirname, "/corr_us_stocks_Tin", Tin, "_", currentday, ".rds")
     Crr_mat = file_checker(firstday, currentday, filename, returns)
@@ -37,6 +37,9 @@ for(currentday in as.character(tail(time_steps, -Tin))){
 
     test_start_date = time_steps[which(time_steps %in% currentday) + 1]
     test_end_date = time_steps[which(time_steps %in% currentday) + Tin]
+
+    if (counter < 2)
+      axis_test_start_date = test_start_date
 
     if (!is.na(test_end_date)){
 
@@ -73,8 +76,6 @@ for(currentday in as.character(tail(time_steps, -Tin))){
 
       myreturns = myreturns[, c(colnames(filtered_test_Crr_mat))]
 
-      filtered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_filtered)
-
       skip_round = tryCatch(
         {
           unfiltered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_unfiltered)
@@ -83,6 +84,9 @@ for(currentday in as.character(tail(time_steps, -Tin))){
            })
 
       if(!is.null(skip_round)){
+          filtered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_filtered)
+
+          axis_test_end_date = test_end_date
 
           in_filtered_mean_list[length(in_filtered_mean_list) + 1] = filtered_portfolio_statis$pm
           in_filtered_sd_list[length(in_filtered_sd_list) + 1] = filtered_portfolio_statis$ps
@@ -107,3 +111,21 @@ for(currentday in as.character(tail(time_steps, -Tin))){
    }
   }
 }
+write.csv(unlist(in_filtered_mean_list), "In_Sample_filtered_mean.csv")
+write.csv(unlist(in_filtered_sd_list), "In_Sample_filtered_std.csv")
+
+plot(unlist(in_sample_filtered_risk_list), t = "l", col = "green", cex=13.5, xlab = "timesteps", ylab="portfolio risk" )
+lines(unlist(in_sample_unfiltered_risk_list), col = "red", cex=2.5)
+title(main="In-sample risk comparision")
+legend(0, 1.4e-05, legend= c("Filtered","Unfiltered"), col=c("green", "red"), lty=1:2, cex=1.2, bty = "n", lwd=2)
+
+plot(unlist(filtered_risk_list), t = "l", col = "green", cex=13.5, xlab = "timesteps", ylab="portfolio risk" )
+lines(unlist(unfiltered_risk_list), col = "red", cex=2.5)
+title(main="Out-of-sample risk comparision")
+legend(0, 2.74e-05, legend= c("Filtered","Unfiltered"), col=c("green", "red"), lty=1:2, cex=1.2, bty = "n", lwd=2)
+
+plot(unlist(ratio_filtered), t = "l", col = "green", cex=13.5, xlab = "timesteps", ylab="portfolio risk" )
+lines(unlist(ratio_unfiltered), col = "red", cex=2.5)
+title(main="Phi plot")
+legend(0, 3.5, legend= c("Filtered","Unfiltered"), col=c("green", "red"), lty=1:2, cex=1.2, bty = "n", lwd=2)
+

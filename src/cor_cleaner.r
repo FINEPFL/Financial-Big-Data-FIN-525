@@ -8,7 +8,7 @@ cor_cleaner = function(C_mat, Tin){
 
   eigns = eigen(C_mat)
   lambda = eigns$values
-
+  
   lambdaFiltered = data.frame(lambda * (lambda > lambdaPlus))
   lambdaFiltered = lambdaFiltered[lambdaFiltered>0]
 

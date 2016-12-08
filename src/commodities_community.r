@@ -10,6 +10,6 @@ trees_n_communities =  community_detection(cov_mat_us_stock, 2)
 plot(trees_n_communities$minimum_spanning_tree,
      vertex.color = trees_n_communities$community$membership,
      mark.groups = communities(trees_n_communities$community),
-     vertex.size = 1.25,
+     vertex.size = 2.25,
      vertex.label.dist = 1.35,
-     vertex.label.cex = 1.35)
+     vertex.label.cex = 1.5)
