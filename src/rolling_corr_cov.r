@@ -14,13 +14,22 @@ time_steps = as.character(index(returns))
 Tin = 900
 dirname = "../datasets/mid-results/us_stocks/rolling_corr"
 
-unfilteredList = list()
-filteredList = list()
+filtered_risk_list = list()
+unfiltered_risk_list = list()
+
+in_filtered_mean_list = list()
+in_filtered_sd_list = list()
+
+in_sample_filtered_risk_list = list()
+in_sample_unfiltered_risk_list = list()
+
+
 counter = 0
+skip_round = 0
 
 for(currentday in as.character(tail(time_steps, -Tin))){
   counter = counter + 1
-  if (counter > 1400) {
+  if (counter > -1) {
     firstday = time_steps[which(time_steps %in% currentday) - Tin + 1]
     filename = paste0(dirname, "/corr_us_stocks_Tin", Tin, "_", currentday, ".rds")
     Crr_mat = file_checker(firstday, currentday, filename, returns)
@@ -65,18 +74,36 @@ for(currentday in as.character(tail(time_steps, -Tin))){
       myreturns = myreturns[, c(colnames(filtered_test_Crr_mat))]
 
       filtered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_filtered)
-      unfiltered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_unfiltered)
 
-      filtered_tempweight = filtered_portfolio_statis$pw
-      unfiltered_tempweight = unfiltered_portfolio_statis$pw
+      skip_round = tryCatch(
+        {
+          unfiltered_portfolio_statis = portfolio.optim(myreturns, mean(myreturns), covmat=cov_unfiltered)
+        }, error = function(cond){
+            message("The unfiltered testing matrix is not PSD...skipped..")
+           })
 
-      port_risk = t(filtered_tempweight) %*% cov_filtered_testmat %*% filtered_tempweight
-      port_risk_unfiltered = t(unfiltered_tempweight) %*% cov_filtered_testmat %*% unfiltered_tempweight
+      if(!is.null(skip_round)){
 
-      filteredList[length(filteredList) + 1] = port_risk
-      unfilteredList[length(unfilteredList) + 1] = port_risk_unfiltered
+          in_filtered_mean_list[length(in_filtered_mean_list) + 1] = filtered_portfolio_statis$pm
+          in_filtered_sd_list[length(in_filtered_sd_list) + 1] = filtered_portfolio_statis$ps
+
+          filtered_tempweight = filtered_portfolio_statis$pw
+          unfiltered_tempweight = unfiltered_portfolio_statis$pw
+
+          in_sample_filtered_risk = t(filtered_tempweight) %*% cov_filtered %*% filtered_tempweight
+          in_sample_unfiltered_risk = t(unfiltered_tempweight) %*% cov_filtered %*% unfiltered_tempweight
+
+          in_sample_filtered_risk_list[length(in_sample_filtered_risk_list) + 1] = in_sample_filtered_risk
+          in_sample_unfiltered_risk_list[length(in_sample_filtered_risk_list) + 1] = in_sample_unfiltered_risk
+
+          port_risk = t(filtered_tempweight) %*% cov_filtered_testmat %*% filtered_tempweight
+          port_risk_unfiltered = t(unfiltered_tempweight) %*% cov_filtered_testmat %*% unfiltered_tempweight
+
+          filtered_risk_list[length(filtered_risk_list) + 1] = port_risk
+          unfiltered_risk_list[length(unfiltered_risk_list) + 1] = port_risk_unfiltered
+
+        }
+
    }
   }
 }
-
-# write.table(stdList, sep = ",")
