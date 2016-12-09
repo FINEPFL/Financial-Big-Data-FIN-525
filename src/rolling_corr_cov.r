@@ -23,6 +23,9 @@ in_filtered_sd_list = list()
 in_sample_filtered_risk_list = list()
 in_sample_unfiltered_risk_list = list()
 
+filtered_weight_list = list()
+unfiltered_weight_list = list()
+
 
 counter = 0
 skip_round = 0
@@ -92,6 +95,9 @@ for(currentday in as.character(tail(time_steps, -Tin))){
           in_filtered_sd_list[length(in_filtered_sd_list) + 1] = filtered_portfolio_statis$ps
 
           filtered_tempweight = filtered_portfolio_statis$pw
+          browser()
+          filtered_weight_list[length(filtered_weight_list) + 1] = list(filtered_tempweight)
+
           unfiltered_tempweight = unfiltered_portfolio_statis$pw
 
           in_sample_filtered_risk = t(filtered_tempweight) %*% cov_filtered %*% filtered_tempweight
@@ -128,4 +134,3 @@ plot(unlist(ratio_filtered), t = "l", col = "green", cex=13.5, xlab = "timesteps
 lines(unlist(ratio_unfiltered), col = "red", cex=2.5)
 title(main="Phi plot")
 legend(0, 3.5, legend= c("Filtered","Unfiltered"), col=c("green", "red"), lty=1:2, cex=1.2, bty = "n", lwd=2)
-

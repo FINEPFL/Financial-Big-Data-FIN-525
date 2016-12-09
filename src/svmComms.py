@@ -43,9 +43,11 @@ full_tensor, tags = (add_tag("raw_data.csv", mean_list))
 
 test_mistake_rate_list = []
 train_mistake_rate_list = []
-test_size_list = [1500, 1300, 1000, 800, 600]
+test_size_list = [1480, 1295, 1100, 925, 740]
 
 for test_size in test_size_list:
+
+    print test_size
 
     X =  full_tensor[:-test_size]
     y =  tags[:-test_size]
@@ -53,7 +55,7 @@ for test_size in test_size_list:
     test_set = full_tensor[-test_size:]
     test_tags = y[-test_size:]
 
-    clf = svm.SVC(C=100.0, kernel="rbf",gamma=0.001)
+    clf = svm.SVC(C=100.0, kernel="rbf", gamma="auto")
     clf.fit(X, y)
 
     # train_mistake_rate_list.append(sum(abs(np.asarray(map(operator.sub,
@@ -64,10 +66,3 @@ for test_size in test_size_list:
     test_tags, clf.predict(test_set)))))/test_size)
 
 print test_mistake_rate_list
-
-
-
-
-
-
-#
