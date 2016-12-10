@@ -3,8 +3,8 @@ setwd("/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/src")
 source("init.r")
 pwd = init()
 
-us_stock_data = "/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/datasets/mid-results/us_stocks/us_stocks_filtered.rds"
-mtgov_path = "/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/datasets/mtgoxUSD.csv"
+us_stock_data = "../datasets/mid-results/us_stocks/us_stocks_filtered.rds"
+mtgov_path = "../datasets/mtgoxUSD.csv"
 
 test = 0
 
