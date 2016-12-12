@@ -1,7 +1,5 @@
 setwd("/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/src")
 source("init.r")
-source("commu_detector.r")
-library(igraph)
 
 cov_mat_us_stock = readRDS("../datasets/mid-results/us_stocks/rolling_corr/corr_us_stocks_Tin900_1998-07-30.rds")
 cov_mat_us_stock = cov_mat_us_stock

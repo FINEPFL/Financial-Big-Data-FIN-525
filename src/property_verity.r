@@ -35,18 +35,18 @@ acf(r)
 acf(logreturn)
 
 # check cdf of logreturn
-# cdfval = ecdf(logreturn)
-# cdf_cons1 = sort(unique(logreturn))
-# plot(abs(cdf_cons1), 1-cdfval(abs(cdf_cons1)), log="xy", t="l")
+cdfval = ecdf(logreturn)
+cdf_cons1 = sort(unique(logreturn))
+plot(abs(cdf_cons1), 1-cdfval(abs(cdf_cons1)), log="xy", t="l")
 
-# sig = abs(logreturn)
-# acfval = acf(sig, plot = FALSE, log.max = 100)
-# plot(0:(length(acfval$acf)-1),acfval$acf,log='xy',t='l')
-# y1=tail(log(acfval$acf),-1)
-# lm(y1~cdf_cons1)
+sig = abs(logreturn)
+acfval = acf(sig, plot = FALSE, log.max = 100)
+plot(0:(length(acfval$acf)-1),acfval$acf,log='xy',t='l')
+y1=tail(log(acfval$acf),-1)
+lm(y1~cdf_cons1)
 
 # check market performance
-sp500 = fread("/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/datasets/sp500.csv")
+sp500 = fread("../datasets/sp500.csv")
 sp500 = diff(sp500$Close)
 plot(density(sp500))
 theory = rnorm(10*length(sp500), mean = 0, sd=1)

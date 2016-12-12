@@ -1,6 +1,7 @@
-library(xts)
-library(WGCNA)
 setwd("/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/src")
+source("init.r")
+pwd = init()
+
 raw_data = readRDS("../datasets/mid-results/us_stocks/us_stocks_filtered.rds")
 
 returns = diff(log(raw_data))

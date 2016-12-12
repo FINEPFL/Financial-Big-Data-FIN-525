@@ -1,6 +1,5 @@
 from __future__ import division
 from matplotlib import pyplot as plt
-
 from sklearn import svm
 
 import numpy as np
@@ -57,10 +56,6 @@ for test_size in test_size_list:
 
     clf = svm.SVC(C=100.0, kernel="rbf", gamma="auto")
     clf.fit(X, y)
-
-    # train_mistake_rate_list.append(sum(abs(np.asarray(map(operator.sub,
-    # y, clf.predict(X)))))/(3701-test_size))
-    # # print y, clf.predict(X)
 
     test_mistake_rate_list.append(sum(abs(np.asarray(map(operator.sub,
     test_tags, clf.predict(test_set)))))/test_size)

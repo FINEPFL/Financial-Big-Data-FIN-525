@@ -35,7 +35,7 @@ num_dates = length(index(raw_data))
 begin_date = index(raw_data)[1]
 end_date = index(raw_data)[length(index(raw_data))]
 
-saveRDS(raw_data,file='/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/datasets/mid-results/us_stocks/us_stocks_filtered.rds')
+saveRDS(raw_data,file='../datasets/mid-results/us_stocks/us_stocks_filtered.rds')
 
 stats = list(num_stocks, num_dates, begin_date, end_date)
-write.table(stats, file = "/Users/mzhao/Desktop/FBD/Financial-Big-Data-FIN-525/stats/us_stock_stats", sep=",")
+write.table(stats, file = "../stats/us_stock_stats", sep=",")

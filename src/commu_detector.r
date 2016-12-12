@@ -1,4 +1,4 @@
-community_detection = function(distance_matrix, select_algorithm = 1){
+"community_detection" = function(distance_matrix, select_algorithm = 1){
 
   community_graph = graph_from_adjacency_matrix(distance_matrix, mode='undirected', weighted = TRUE, diag=FALSE, add.colnames=NULL)
   min_span_tree = minimum.spanning.tree(community_graph)

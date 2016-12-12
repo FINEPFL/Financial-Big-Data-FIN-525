@@ -1,4 +1,4 @@
-init = function(){
+"init" = function(){
   rm(list = ls())
   out = tryCatch(
     {     library(zoo)
@@ -13,6 +13,7 @@ init = function(){
           source("file_checker.r")
           source("cor_cleaner.r")
           source("commodities_data_processing.r")
+          source("test_used_checker.r")
 
       }, error = function(cond){
               message(cond)

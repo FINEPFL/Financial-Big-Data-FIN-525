@@ -1,4 +1,4 @@
-getComData = function(){
+"getComData" = function(){
 
     natural_gas = data.frame(read.csv("../datasets/commodities/naturalgas.csv",
                       header = TRUE, sep = ",", quote = "\"",
