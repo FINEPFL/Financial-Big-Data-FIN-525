@@ -47,9 +47,9 @@ Files are organised in following manner:
 		                 
 |- statistics
 
-		|- commodity_stats	
+		|- commodity_stats.csv	
 		
-		|- us_stocks_stats
+		|- us_stocks_stats.csv
 
 							
 								
@@ -60,7 +60,7 @@ Files are organised in following manner:
 * data.table
 * PortfolioAnalytics
 * series
-* graph
+* igraph
 
 #### Acknowledgement
 This is a collaborative working results with Lu at [EPFL](http://epfl.ch), under guidance of [Prof. Challet](http://fiquant.mas.ecp.fr/people/faculty/damien-challet/), [EPFL](http://epfl.ch) and [CentraleSupélec](https://fr.wikipedia.org/wiki/CentraleSupélec).
