@@ -59,7 +59,7 @@ Files are organised in following manner:
 * WGCNA
 * data.table
 * PortfolioAnalytics
-* series
+* tseries
 * igraph
 
 #### Acknowledgement
